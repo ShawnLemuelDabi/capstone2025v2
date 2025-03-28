@@ -1,0 +1,9 @@
+1. To run the scraper
+py main.py
+
+2. Extract the URLs from the csv output by scraper
+py .\utils\url_extractor.py
+
+
+3. To  run the downloader
+python -m downloader.core
