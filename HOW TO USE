@@ -7,3 +7,8 @@ py .\utils\url_extractor.py
 
 3. To  run the downloader
 py .\downloader\downloader.py
+
+4. Check for invalid videos (this happens because photo reels are downloaded as videos)
+py .\downloader\invalid_video_checker.py
+
+5. Feed the videos through actor screen time model
