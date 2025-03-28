@@ -12,3 +12,7 @@ py .\downloader\downloader.py
 py .\downloader\invalid_video_checker.py
 
 5. Feed the videos through actor screen time model
+py .\content_analysers\actor_screen_time\actor_screen_time.py
+
+6. Feed the videos through sentiment analysis
+py .\content_analysers\sentiment_analysis\sentiment_analysis.py
