@@ -6,4 +6,4 @@ py .\utils\url_extractor.py
 
 
 3. To  run the downloader
-python -m downloader.core
+py .\downloader\downloader.py
