@@ -24,5 +24,9 @@ according to how you want to train the model. (do adjust the directories based o
 
 py .\content_analysers\actor_screen_time\frames_extractor.py
 
+5.2 This is to sequence the frames properly. Do it for both positive and negative frames
+py .\content_analysers\actor_screen_time\frames_sequencer.py
+
+
 6. Feed the videos through sentiment analysis
 py .\content_analysers\sentiment_analysis\sentiment_analysis.py
