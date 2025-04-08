@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 base_dir = r"C:\Users\shann\PycharmProjects\capstone2025V2\content_analysers\actor_screen_time\model_trainer"
 positive_dir = os.path.join(base_dir, "positives")
 negative_dir = os.path.join(base_dir, "negatives")
-test_dir = r"C:\Users\shann\PycharmProjects\capstone2025V2\downloads\tiktok_shawndowhat_20250328_125539_urls"
+test_dir = r"C:\Users\shann\PycharmProjects\capstone2025V2\downloads\tiktok_shawnlemuel_20250408_235452_urls"
 
 # Set target size for all images
 target_size = (224, 224)

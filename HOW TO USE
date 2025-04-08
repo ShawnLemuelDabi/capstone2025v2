@@ -10,8 +10,8 @@ py .\downloader\downloader.py
 4. Check for invalid videos (this happens because photo reels are downloaded as videos)
 py .\downloader\invalid_video_checker.py
 
-5.1 This is to extract frames and create more positive and negative examples for the actor
-screen time model training.
+5.1 This is to extract frames and create more positive and negative examples for the actor screen time model training.
+THIS IS ONLY DONE WHEN NECESSARY TO INCREASE MODEL ACCURACY
 
 When running it please select
 C:\Users\shann\PycharmProjects\capstone2025V2\content_analysers\actor_screen_time\model_trainer\positive_videos
