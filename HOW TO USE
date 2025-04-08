@@ -10,9 +10,6 @@ py .\downloader\downloader.py
 4. Check for invalid videos (this happens because photo reels are downloaded as videos)
 py .\downloader\invalid_video_checker.py
 
-5. Feed the videos through actor screen time model
-py .\content_analysers\actor_screen_time\actor_screen_time.py
-
 5.1 This is to extract frames and create more positive and negative examples for the actor
 screen time model training.
 
@@ -27,6 +24,12 @@ py .\content_analysers\actor_screen_time\frames_extractor.py
 5.2 This is to sequence the frames properly. Do it for both positive and negative frames
 py .\content_analysers\actor_screen_time\frames_sequencer.py
 
+5.3 This is to generate the training mapping csv
+py .\content_analysers\actor_screen_time\mapping_csv_editor.py
+
+5.4 Feed the videos through actor screen time model, select the training data
+Change actor_sceen_time.py line 130 to the correct output directory
+py .\content_analysers\actor_screen_time\actor_screen_time.py
 
 6. Feed the videos through sentiment analysis
 py .\content_analysers\sentiment_analysis\sentiment_analysis.py
