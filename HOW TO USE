@@ -1,3 +1,7 @@
+Please ensure that the environment is python 3.8.2
+Please ensure that the dependencies and libraries used adhere to the versions mentioned in requirements.txt
+If possible, use pyCharm
+
 1. To run the scraper
 py main.py
 
@@ -39,3 +43,6 @@ py .\content_analysers\sentiment_analysis\sentiment_analysis.py
 py .\csv_merger\csv_merger.py
 7.2 select the correct merged file and apply the refinements
 py .\csv_merger\csv_refiner.py
+
+8. Extract the themes from the captions column of the generated CSV data
+8.1 pip install space==3.5.0 (because this is the version compatible with python 3.8.2 and other existing libraries)
