@@ -46,3 +46,4 @@ py .\csv_merger\csv_refiner.py
 
 8. Extract the themes from the captions column of the generated CSV data
 8.1 pip install space==3.5.0 (because this is the version compatible with python 3.8.2 and other existing libraries)
+py .\theme_extractor\theme_extractor.py
