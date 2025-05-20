@@ -1,72 +1,71 @@
 import pandas as pd
-import spacy
-from gensim import corpora, models
-import re
-from collections import Counter
+from transformers import pipeline
+import time
+from tqdm import tqdm
 
-# Load the CSV file
-file_path = r"C:\Users\shann\PycharmProjects\capstone2025V2\outputs\csv_merger\refined_combined_for_predictive_modelling.csv"
-df = pd.read_csv(file_path)
+# Define the topics
+TOPICS = [
+    "motivation",
+    "lee kuan yew",
+    "lechon",
+    "bak kut teh",
+    "japanese food",
+    "filipino food",
+    "halal",
+    "travel",
+    "product sales video",
+    "dessert",
+    "food (general)"
+]
 
-# Load spaCy's English model
-nlp = spacy.load("en_core_web_sm")
-
-
-def preprocess_text(text):
-    if not isinstance(text, str) or text.strip() == "":
-        return []
-
-    # Remove URLs, mentions, hashtags, and special characters
-    text = re.sub(r'http\S+|@\w+|#\w+|[^\w\s]', '', text)
-
-    # Process text with spaCy
-    doc = nlp(text.lower())
-
-    # Extract lemmatized tokens (nouns, adjectives, verbs)
-    tokens = [
-        token.lemma_ for token in doc
-        if not token.is_stop
-           and not token.is_punct
-           and token.pos_ in ["NOUN", "ADJ", "VERB", "PROPN"]  # Include proper nouns
-           and len(token.lemma_) > 2
-    ]
-    return tokens
+# Initialize the zero-shot classification pipeline
+classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
 
 
-# Apply preprocessing and filter empty entries
-df['Processed'] = df['Caption'].apply(preprocess_text)
-df = df[df['Processed'].apply(len) > 0]  # Remove empty entries
+def assign_topic(caption):
+    """
+    Assigns a topic to a caption using zero-shot classification
+    """
+    if pd.isna(caption) or not caption.strip():
+        return "unknown"
 
-# Create a dictionary and corpus
-dictionary = corpora.Dictionary(df['Processed'])
-corpus = [dictionary.doc2bow(tokens) for tokens in df['Processed']]
-
-# Train the LDA model with more topics and passes
-lda_model = models.LdaModel(
-    corpus=corpus,
-    id2word=dictionary,
-    num_topics=10,  # Increased from 5 to 10 for more diversity
-    random_state=42,
-    passes=20,  # More iterations for better convergence
-    alpha='auto',  # Let the model optimize topic distributions
-    eta='auto',  # Let the model optimize word distributions
-)
-
-# Print topics with top 5 keywords
-for idx, topic in lda_model.print_topics(-1, num_words=5):
-    print(f"Topic {idx}: {topic}\n")
+    try:
+        # Classify the caption against our topics
+        result = classifier(caption, TOPICS, multi_label=False)
+        return result['labels'][0]  # Return the top predicted topic
+    except Exception as e:
+        print(f"Error processing caption: {caption}. Error: {e}")
+        return "unknown"
 
 
-# Dynamically assign topic names based on top keywords
-def get_topic_name(lda_model, topic_id, n_words=3):
-    words = lda_model.show_topic(topic_id, topn=n_words)
-    return "_".join([word[0] for word in words])  # e.g., "workout_endorphin_health"
+def process_dataset(input_file, output_file):
+    """
+    Processes the dataset by reading captions and assigning topics
+    """
+    # Read the dataset
+    df = pd.read_csv(input_file)
+
+    # Initialize progress bar
+    tqdm.pandas(desc="Assigning topics to captions")
+
+    # Assign topics to each caption
+    df['Topic'] = df['Caption'].progress_apply(assign_topic)
+
+    # Save the results
+    df.to_csv(output_file, index=False)
+    print(f"Processing complete. Results saved to {output_file}")
+
+    return df
 
 
-# Assign dominant topic and label
-df['Dominant_Topic'] = [max(lda_model[doc], key=lambda x: x[1])[0] for doc in corpus]
-df['Topic_Label'] = df['Dominant_Topic'].apply(lambda x: get_topic_name(lda_model, x))
+if __name__ == "__main__":
+    # File paths
+    input_file = r"C:\Users\shann\PycharmProjects\capstone2025V2\outputs\csv_merger\refined_combined_for_predictive_modelling.csv"
+    output_file = r"C:\Users\shann\PycharmProjects\capstone2025V2\outputs\theme_extractor\refined_combined_with_topics.csv"
 
-# Save results
-output_path = r"C:\Users\shann\PycharmProjects\capstone2025V2\outputs\topic_modeling_results.csv"
-df.to_csv(output_path, index=False)
+    # Process the dataset
+    processed_df = process_dataset(input_file, output_file)
+
+    # Print some statistics
+    print("\nTopic Distribution:")
+    print(processed_df['Topic'].value_counts())
